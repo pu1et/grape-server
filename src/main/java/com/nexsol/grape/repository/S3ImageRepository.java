@@ -57,10 +57,9 @@ public class S3ImageRepository implements ImageRepository{
         String filePath = image.getName();
 
         try{
-            File file = new File(filePath);
-            image.getFile().transferTo(file);
+            putObjectRequest = new PutObjectRequest(bucketName, filePath, image.getFile().getInputStream(), objectMetadata);
+            s3.putObject(putObjectRequest);
 
-            s3.putObject(bucketName, objectName, file);
             System.out.format("Object %s has been created.\n", objectName);
         }catch (AmazonS3Exception e){
             e.printStackTrace();

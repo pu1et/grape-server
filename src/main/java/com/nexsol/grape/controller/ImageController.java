@@ -6,15 +6,12 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
+import javax.swing.plaf.multi.MultiInternalFrameUI;
+import java.util.*;
 
 @Controller
 public class ImageController {
@@ -25,18 +22,40 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    /**
+     * @param images
+     * @return path
+     */
     @PostMapping("/users/image/new")
+    @ResponseBody
+    public Map imageTest(@RequestParam("upload") List<MultipartFile> images, @RequestParam("id") long id){
+
+        Map result = new HashMap<String, Object>();
+        String path = null;
+
+        for(int i=0;i<images.size();i++){
+            MultipartFile tmpFile = images.get(i);
+            String name = id+"/"+(i+1);
+
+            Image image = new Image(1L, tmpFile, name);
+            path = imageService.upload(image);
+        }
+        result.put("path", path);
+        return result;
+    }
+
+    @PostMapping("/users/image/test")
     @ResponseBody
     public Map imageCreate(ImageForm imageForm){
         Map result = new HashMap<String, Object>();
         String path = null;
 
         for(int i=1;i<=imageForm.getFiles().size();i++){
-            Image image = new Image();
-            image.setId(imageForm.getId());
-            image.setFile(imageForm.getFiles().get(i-1));
-            image.setName("/"+imageForm.getId()+"/"+i);
+            long id = imageForm.getId();
+            MultipartFile file = imageForm.getFiles().get(i-1);
+            String name = imageForm.getId()+"/"+i;
 
+            Image image = new Image(id, file, name);
             path = imageService.upload(image);
         }
         result.put("path", path);

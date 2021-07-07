@@ -8,6 +8,14 @@ public class Image {
     private MultipartFile file; //file.getBytes() 실제 내용
     private String name; // folder + name
 
+    public Image() { }
+
+    public Image(Long id, MultipartFile file, String name) {
+        this.id = id;
+        this.file = file;
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
