@@ -28,20 +28,23 @@ public class ImageController {
      */
     @PostMapping("/users/image/new")
     @ResponseBody
-    public Map imageTest(@RequestParam("upload") List<MultipartFile> images, @RequestParam("id") long id){
+    public int imageTest(@RequestParam("upload") List<MultipartFile> images, @RequestParam("id") long id){
 
-        Map result = new HashMap<String, Object>();
         String path = null;
 
         for(int i=0;i<images.size();i++){
-            MultipartFile tmpFile = images.get(i);
-            String name = id+"/"+(i+1);
+            try {
+                MultipartFile tmpFile = images.get(i);
+                String name = id + "/" + (i + 1);
 
-            Image image = new Image(1L, tmpFile, name);
-            path = imageService.upload(image);
+                Image image = new Image(1L, tmpFile, name);
+                path = imageService.upload(image);
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                return HttpStatus.SC_NO_CONTENT;
+            }
         }
-        result.put("path", path);
-        return result;
+        return HttpStatus.SC_OK;
     }
 
     @PostMapping("/users/image/test")
