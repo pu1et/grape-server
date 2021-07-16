@@ -6,15 +6,15 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.internal.Mimetypes;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.nexsol.grape.domain.Image;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +32,8 @@ public class S3ImageRepository implements ImageRepository{
             .build();
 
     String bucketName = "grape-bucket";
+    String objectName = "doc-image";
+
 
     @Override
     public Image save(Image image){
@@ -42,6 +44,7 @@ public class S3ImageRepository implements ImageRepository{
         objectMetadata.setContentLength(0L);
         objectMetadata.setContentType("application/x-directory");
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName, new ByteArrayInputStream(new byte[0]), objectMetadata);
+
 
         try{
             s3.putObject(putObjectRequest);
@@ -55,10 +58,14 @@ public class S3ImageRepository implements ImageRepository{
         // upload local file
         String objectName = "doc-image";
         String filePath = image.getName();
-
         try{
-            putObjectRequest = new PutObjectRequest(bucketName, filePath, image.getFile().getInputStream(), objectMetadata);
-            s3.putObject(putObjectRequest);
+
+            byte[] bytes = image.getFile().getBytes();
+            objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(bytes.length);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
+            s3.putObject(new PutObjectRequest(bucketName, filePath, byteArrayInputStream, objectMetadata));
 
             System.out.format("Object %s has been created.\n", objectName);
         }catch (AmazonS3Exception e){
@@ -71,6 +78,80 @@ public class S3ImageRepository implements ImageRepository{
 
         return image;
     }
+
+
+/*
+    @Override
+    public Image save(Image image){
+
+        String folderName = image.getId()+"/";
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(0L);
+        objectMetadata.setContentType("application/x-directory");
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, folderName, new ByteArrayInputStream(new byte[0]), objectMetadata);
+
+
+        try{
+            s3.putObject(putObjectRequest);
+            System.out.format("Folder %s has been created.\n", folderName);
+        }catch (AmazonS3Exception e){
+            e.printStackTrace();
+        }catch (SdkClientException e){
+            e.printStackTrace();
+        }
+
+        try{
+//            String folderName = image.getId()+"/";
+            File file = new File(image.getFile().getOriginalFilename());
+            image.getFile().transferTo(file);
+
+            long contentLength = file.length();
+            long partSize = 10 * 1024 * 1024;
+
+            InitiateMultipartUploadResult initiateMultipartUploadResult = s3.initiateMultipartUpload(new InitiateMultipartUploadRequest(bucketName, objectName));
+            String uploadId = initiateMultipartUploadResult.getUploadId();
+            System.out.println("uploadId = " + uploadId);
+            List<PartETag> partETagList = new ArrayList<PartETag>();
+
+            long fileOffset = 0;
+            for(int i=1; fileOffset < contentLength; i++){
+                partSize = Math.min(partSize, (contentLength - fileOffset));
+
+                UploadPartRequest uploadPartRequest = new UploadPartRequest()
+                        .withBucketName(bucketName)
+                        .withKey(objectName)
+                        .withUploadId(uploadId)
+                        .withPartNumber(i)
+                        .withFile(file)
+                        .withFileOffset(fileOffset)
+                        .withPartSize(partSize);
+
+                UploadPartResult uploadPartResult = s3.uploadPart(uploadPartRequest);
+                partETagList.add(uploadPartResult.getPartETag());
+
+                fileOffset += partSize;
+            }
+            CompleteMultipartUploadRequest compRequest = new CompleteMultipartUploadRequest(bucketName, objectName, uploadId, partETagList);
+            CompleteMultipartUploadResult comResponse = s3.completeMultipartUpload(compRequest);
+
+//            CompleteMultipartUploadResult completeMultipartUploadResult = s3.completeMultipartUpload(new CompleteMultipartUploadRequest(bucketName, objectName, uploadId, partETagList));
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }catch (AmazonS3Exception e){
+            e.printStackTrace();
+        }catch (SdkClientException e){
+            e.printStackTrace();
+        }
+
+        return image;
+
+    }
+
+
+
+ */
 
     @Override
     public List<Image> findById(Long id) {

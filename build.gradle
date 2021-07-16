@@ -21,6 +21,9 @@ dependencies {
 	implementation group: 'org.json', name: 'json', version: '20210307'
 	implementation group: 'org.springframework', name: 'spring-test', version: '3.1.1.RELEASE'
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
+
+	// 파일 확장자
+	implementation 'commons-io:commons-io:2.5'
 }
 
 test {

@@ -2,6 +2,7 @@ package com.nexsol.grape.controller;
 
 import com.nexsol.grape.domain.Image;
 import com.nexsol.grape.service.ImageService;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +36,10 @@ public class ImageController {
         for(int i=0;i<images.size();i++){
             try {
                 MultipartFile tmpFile = images.get(i);
-                String name = id + "/" + (i + 1);
+                String tmpExt = FilenameUtils.getExtension(tmpFile.getOriginalFilename());
+                String name = id + "/" + (i + 1) + "." + tmpExt;
 
-                Image image = new Image(1L, tmpFile, name);
+                Image image = new Image(id, tmpFile, name);
                 path = imageService.upload(image);
             }catch (NullPointerException e){
                 e.printStackTrace();
