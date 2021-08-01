@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.2'
+	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -15,15 +15,31 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// s3 관련 라이브러리
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.2'
+
+	// json 형식 사용
 	implementation group: 'org.json', name: 'json', version: '20210307'
-	implementation group: 'org.springframework', name: 'spring-test', version: '3.1.1.RELEASE'
-	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.1'
+
+	//lombok
+	annotationProcessor("org.projectlombok:lombok")
+	compileOnly("org.projectlombok:lombok")
 
 	// 파일 확장자
 	implementation 'commons-io:commons-io:2.5'
+
+	// db
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
+
+	testImplementation ('org.springframework.boot:spring-boot-starter-test'){
+		// json 중복 제외
+		exclude group: "com.vaadin.external.google", module:"android-json"
+	}
+
+	// file to MultipartFile
+	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
 }
 
 test {

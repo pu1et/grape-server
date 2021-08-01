@@ -1,42 +1,18 @@
 package com.nexsol.grape.domain;
 
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Image {
 
-    private Long id;
-    private MultipartFile file; //file.getBytes() 실제 내용
-    private String name; // folder + name
+    // objectName = loadId/userId
+    private Long userId; // 사용자 아이디
+    private Long loanId; // 대출 인덱스
+    private MultipartFile file; // file.getBytes() 실제 내용
+    private String name; // folder + name + 확장자
 
-    public Image() { }
-
-    public Image(Long id, MultipartFile file, String name) {
-        this.id = id;
-        this.file = file;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    public void setFile(MultipartFile file) {
-        this.file = file;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
