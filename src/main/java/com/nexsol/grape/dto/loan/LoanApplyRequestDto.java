@@ -1,4 +1,4 @@
-package com.nexsol.grape.controller;
+package com.nexsol.grape.dto.loan;
 
 import com.nexsol.grape.domain.Loan;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter @Setter
-public class ApplyLoanForm {
+public class LoanApplyRequestDto {
 
     private Long id;
     private List<MultipartFile> images;

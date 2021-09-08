@@ -1,7 +1,6 @@
 package com.nexsol.grape.service;
 
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.nexsol.grape.controller.ApplyLoanForm;
+import com.nexsol.grape.dto.loan.LoanApplyRequestDto;
 import com.nexsol.grape.domain.Image;
 import com.nexsol.grape.util.ObjectStorageUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.io.File;
 import java.util.List;
 
 @Service
@@ -27,7 +24,7 @@ public class ImageService {
      * @param loanForm
      */
     @Transactional
-    public void uploadImages(Long loanId, ApplyLoanForm loanForm){
+    public void uploadImages(Long loanId, LoanApplyRequestDto loanForm){
 
         List<MultipartFile> images = loanForm.getImages();
 

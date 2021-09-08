@@ -1,14 +1,11 @@
 package com.nexsol.grape.service;
 
-import com.nexsol.grape.controller.ApplyLoanForm;
+import com.nexsol.grape.dto.loan.LoanApplyRequestDto;
 import com.nexsol.grape.domain.Loan;
 import com.nexsol.grape.repository.LoanRepository;
-import com.nexsol.grape.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 
 @Service
@@ -16,7 +13,7 @@ import java.util.Optional;
 public class LoanService {
 
     private final ImageService imageService;
-    private final UserService userService;
+    private final MemberService memberService;
     private final LoanRepository loanRepository;
 
     /**
@@ -25,7 +22,7 @@ public class LoanService {
      * @return 저장된 loan 테이블의 인덱스
      */
     @Transactional
-    public Loan applyLoan(ApplyLoanForm loanForm){
+    public Loan applyLoan(LoanApplyRequestDto loanForm){
 
         Loan loan = loanForm.toLoan();
 
@@ -33,7 +30,7 @@ public class LoanService {
         Long loanId = store(loan).getId();
 
         // 회원 검증
-        userService.validateUser(loan.getUserId());
+        memberService.validateUser(loan.getUserId());
 
         // Object Storage 에 이미지 파일 업로드
         imageService.uploadImages(loanId, loanForm);

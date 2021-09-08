@@ -1,23 +1,21 @@
 package com.nexsol.grape.controller;
 
-import com.nexsol.grape.response.ApiResponse;
+import com.nexsol.grape.dto.loan.LoanApplyRequestDto;
+import com.nexsol.grape.common.ApiResponseDto;
 import com.nexsol.grape.service.ImageService;
 import com.nexsol.grape.service.LoanService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/loan")
+@RequestMapping("")
 public class LoanController {
 
     private final LoanService loanService;
@@ -25,15 +23,15 @@ public class LoanController {
 
     /**
      * 대출 신청
-     * @param applyLoanForm : userId, images, desiredLimit, applicationDate
+     * @param loanApplyRequestDto : userId, images, desiredLimit, applicationDate
      * @return ApiResponse
      */
-    @PostMapping("")
+    @PostMapping("/api/loan")
     @ResponseBody
-    public ApiResponse applyLoan(ApplyLoanForm applyLoanForm){
+    public ApiResponseDto applyLoan(LoanApplyRequestDto loanApplyRequestDto){
 
-        loanService.applyLoan(applyLoanForm);
-        return new ApiResponse(200, "업로드 성공", null);
+        loanService.applyLoan(loanApplyRequestDto);
+        return new ApiResponseDto(200, "업로드 성공", null);
     }
 
     @GetMapping(value = "/{loanId}/{userId}",
@@ -51,15 +49,15 @@ public class LoanController {
             data.add("", entity);
         }
 
-        ApiResponse result = new ApiResponse(200, "이미지 파일 받기 성공", data);
+        ApiResponseDto result = new ApiResponseDto(200, "이미지 파일 받기 성공", data);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{loanId}/{userId}/test")
-    public ApiResponse getImageFileLinks(@PathVariable("loanId") Long loanId, @PathVariable("userId") Long userId){
+    public ApiResponseDto getImageFileLinks(@PathVariable("loanId") Long loanId, @PathVariable("userId") Long userId){
 
         List<String> imageNameList = imageService.getImageNameList(loanId, userId);
 
-        return new ApiResponse(200, "이미지 파일 리스트", imageNameList);
+        return new ApiResponseDto(200, "이미지 파일 리스트", imageNameList);
     }
 }

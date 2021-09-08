@@ -10,7 +10,7 @@ import java.sql.Date;
 
 @Entity
 @Getter @Setter
-public class User {
+public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +19,7 @@ public class User {
     private Date birth;
 
     @Builder
-    public User(String name, String phone, Date birth) {
+    public Member(String name, String phone, Date birth) {
         this.name = name;
         this.phone = phone;
         this.birth = birth;

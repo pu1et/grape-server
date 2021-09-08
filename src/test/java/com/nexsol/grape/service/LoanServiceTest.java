@@ -1,13 +1,12 @@
 package com.nexsol.grape.service;
 
 import com.amazonaws.util.IOUtils;
-import com.nexsol.grape.controller.ApplyLoanForm;
-import com.nexsol.grape.controller.UserForm;
+import com.nexsol.grape.dto.loan.LoanApplyRequestDto;
+import com.nexsol.grape.dto.member.MemberSignupRequestDto;
 import com.nexsol.grape.domain.Loan;
-import com.nexsol.grape.domain.User;
+import com.nexsol.grape.domain.Member;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -38,7 +36,8 @@ class LoanServiceTest {
 
     @Autowired ImageService imageService;
     @Autowired LoanService loanService;
-    @Autowired UserService userService;
+    @Autowired
+    MemberService userService;
 
     @Value("${custom.path.file}")
     String filepath;
@@ -47,9 +46,9 @@ class LoanServiceTest {
 
     @BeforeEach
     void beforeEach(){
-        UserForm userForm = new UserForm("김이박", "010-0000-0000", "2000-12-31");
-        User joinUser = userService.join(userForm);
-        userId = joinUser.getId();
+        MemberSignupRequestDto memberSignupRequestDto = new MemberSignupRequestDto("김이박", "010-0000-0000", "2000-12-31");
+        Member joinMember = userService.join(memberSignupRequestDto);
+        userId = joinMember.getId();
     }
 
     @Test
@@ -73,7 +72,7 @@ class LoanServiceTest {
         }
 
         // 대출 신청 폼 생성
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20 20:20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20 20:20");
         // 대출 신청
         Loan loan = loanService.applyLoan(loanForm);
 

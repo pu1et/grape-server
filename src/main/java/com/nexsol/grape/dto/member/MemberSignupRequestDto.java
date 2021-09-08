@@ -1,6 +1,6 @@
-package com.nexsol.grape.controller;
+package com.nexsol.grape.dto.member;
 
-import com.nexsol.grape.domain.User;
+import com.nexsol.grape.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,14 +11,14 @@ import java.text.SimpleDateFormat;
 
 @AllArgsConstructor
 @Getter @Setter
-public class UserForm {
+public class MemberSignupRequestDto {
 
     private String name;
     private String phone;
     private String birth;
 
-    public User toUser(){
-        return User.builder()
+    public Member toUser(){
+        return Member.builder()
                 .name(name)
                 .phone(phone)
                 .birth(stringToDate())

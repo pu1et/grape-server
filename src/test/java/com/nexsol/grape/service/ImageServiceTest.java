@@ -1,7 +1,7 @@
 package com.nexsol.grape.service;
 
 import com.amazonaws.util.IOUtils;
-import com.nexsol.grape.controller.ApplyLoanForm;
+import com.nexsol.grape.dto.loan.LoanApplyRequestDto;
 import com.nexsol.grape.util.ObjectStorageUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -9,23 +9,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Description;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +86,7 @@ public class ImageServiceTest {
         }
 
         // Object Storage에 이미지 파일 리스트 업로드
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20");
         imageService.uploadImages(loanId, loanForm);
 
         Integer updateFolderSize = imageService.getFolderListSize(loanId);
@@ -129,7 +121,7 @@ public class ImageServiceTest {
         }
 
         // Object Storage에 이미지 파일 리스트 업로드
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20");
         imageService.uploadImages(loanId, loanForm);
 
         Integer imageListSize = imageService.getImageListSize(loanId,userId);
@@ -166,7 +158,7 @@ public class ImageServiceTest {
         }
 
         // Object Storage에 이미지 파일 리스트 업로드
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20");
         imageService.uploadImages(loanId, loanForm);
 
         // 이미지 파일 리스트를 업로드 한 후 이미지 파일 개수
@@ -199,7 +191,7 @@ public class ImageServiceTest {
         }
 
         // Object Storage에 이미지 파일 리스트 업로드
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20");
         imageService.uploadImages(loanId, loanForm);
 
         String uploadFileName = imageService.getImageNameList(loanId, userId).get(0);
@@ -233,7 +225,7 @@ public class ImageServiceTest {
         }
 
         // Object Storage에 이미지 파일 리스트 업로드
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20");
         imageService.uploadImages(loanId, loanForm);
 
         // 이미지 파일 리스트를 업로드 한 후 이미지 파일 개수 및 파일 크기
@@ -267,7 +259,7 @@ public class ImageServiceTest {
         }
 
         // Object Storage에 이미지 파일 리스트 업로드
-        ApplyLoanForm loanForm = new ApplyLoanForm(userId, images, 1000L, "2020-02-20");
+        LoanApplyRequestDto loanForm = new LoanApplyRequestDto(userId, images, 1000L, "2020-02-20");
         imageService.uploadImages(loanId, loanForm);
 
         // 이미지 파일 리스트를 업로드 한 후 폴더와 파일 수
