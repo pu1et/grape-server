@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("")
+@RequestMapping("/api/loan")
 public class LoanController {
 
     private final LoanService loanService;
@@ -26,7 +26,7 @@ public class LoanController {
      * @param loanApplyRequestDto : userId, images, desiredLimit, applicationDate
      * @return ApiResponse
      */
-    @PostMapping("/api/loan")
+    @PostMapping("/")
     @ResponseBody
     public ApiResponseDto applyLoan(LoanApplyRequestDto loanApplyRequestDto){
 

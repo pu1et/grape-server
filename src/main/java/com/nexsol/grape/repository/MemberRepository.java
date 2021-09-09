@@ -1,26 +1,17 @@
 package com.nexsol.grape.repository;
 
-import com.nexsol.grape.domain.Member;
+import com.nexsol.grape.domain.member.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Repository
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    @PersistenceContext
-    private EntityManager em;
 
-    public Member save(Member member){
-        em.persist(member);
-        return member;
-    }
+    Optional<Member> findById(Long id);
+    Optional<Member> findByPhone(String phone);
 
-    public Optional<Member> findById(Long id){
-        Member member = em.find(Member.class, id);
-        return Optional.ofNullable(member);
-    }
-
+    boolean existsByPhone(String phone);
 }

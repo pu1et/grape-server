@@ -14,6 +14,7 @@ public class LoanService {
 
     private final ImageService imageService;
     private final MemberService memberService;
+    private final AuthService authService;
     private final LoanRepository loanRepository;
 
     /**
@@ -28,9 +29,6 @@ public class LoanService {
 
         // loan 테이블 저장
         Long loanId = store(loan).getId();
-
-        // 회원 검증
-        memberService.validateUser(loan.getUserId());
 
         // Object Storage 에 이미지 파일 업로드
         imageService.uploadImages(loanId, loanForm);
