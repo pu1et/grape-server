@@ -87,7 +87,8 @@ public class ImportUtil {
     }
 
     public ImportMemberDto getMemberInfo(String impUid){
-        if(accessToken == null || expiredAt > System.currentTimeMillis()){
+        // accessToken 은 Unix timestamp 기준이기 때문에 /1000 해줘야 함
+        if(accessToken == null || expiredAt < System.currentTimeMillis()/1000){
             getAccessToken();
         }
 
